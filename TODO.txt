@@ -1,0 +1,6 @@
+TODO List for Text Adventure Game:
+-add classes for commands (with name, description of usage, inputs, and executable methods)
+-add ArrayList of commands in Input
+-add tutorial and help/man pages for all commands
+-add gold value to items and enable player to sell/buy items
+-make 2D array grid of wilderness locations with tags on locations to tell if they have any other Exits to look at (like caves or houses or dungeons or any special location)
