@@ -2,6 +2,7 @@ package textAdventureGame;
 import java.util.*;
 
 public class Input {
+	
 
 	//look for input
 	public static void lookForInput(PlayerCharacter pc) {
@@ -13,33 +14,12 @@ public class Input {
 			String input = keyboard.nextLine();
 
 			//print
-			if(input.equalsIgnoreCase("tutorial") || input.equalsIgnoreCase("help")) {
-				tutorial();
-				continue;
-			}
-			else if(input.equalsIgnoreCase("stats")) {
-				stats(pc);
-				continue;
-			}
-			else if(input.equalsIgnoreCase("inventory")) {
-				inventory(pc);
-				continue;
-			}
-			else if(input.startsWith("item ")) {
+			if(input.startsWith("item ")) {
 				item(input, pc);
 				continue;
 			}
-			else if(input.equalsIgnoreCase("skills")) {
-				skills(pc);
-				continue;
-			}
-			else if(input.startsWith("skill ")) {
-				skill(input, pc);
-				continue;
-			}
-			else if(input.equalsIgnoreCase("info")) {
-				info(pc);
-				continue;
+			else if (input.equalsIgnoreCase("inventory")) {
+				inventory(pc);
 			}
 
 			//exploring
@@ -62,10 +42,6 @@ public class Input {
 				drop(input, pc);
 				return;
 			}
-			else if(input.startsWith("equip ")) {
-				equip(input, pc);
-				return;
-			}
 			else if(input.startsWith("open ")) {
 				open(input, pc);
 				return;
@@ -78,43 +54,10 @@ public class Input {
 				put(input, pc);
 				return;
 			}
-			else if(input.startsWith("eat ") || input.startsWith("drink ") || input.startsWith("consume ")) {
-				consume(input, pc);
-				return;
-			}
-			else if(input.startsWith("attack ") || input.startsWith("break ") || input.startsWith("destroy ")) {
-				attack(input, pc);
-				return;
-			}
-			else if(input.startsWith("talk to ")) {
-				talkTo(input, pc);
-				return;
-			}
-			else if(input.startsWith("give ")) {
-				give(input, pc);
-				return;
-			}
-
-			//location specific input
-			if(pc.getCurrentLocation() instanceof Shop) {
-				((Shop) pc.getCurrentLocation()).lookForInput(input, pc);
-			}
-			if(pc.getCurrentLocation() instanceof Tavern) {
-				((Tavern) pc.getCurrentLocation()).lookForInput(input, pc);
-			}
 		}
 	}
 
 	//print
-	private static void tutorial() {
-		Main.showTutorial();
-	}
-	private static void stats(PlayerCharacter pc) {
-		System.out.println(pc.toStringStats());
-	}
-	private static void inventory(PlayerCharacter pc) {
-		System.out.println(pc.toStringInventory());
-	}
 	private static void item(String input, PlayerCharacter pc) {
 		String itemRequested = input.substring(5);
 
@@ -128,20 +71,8 @@ public class Input {
 
 		System.out.println("Item requested is not in your inventory.");
 	}
-	private static void skills(PlayerCharacter pc) {
-		System.out.println(pc.toStringSkills());
-	}
-	private static void skill(String input, PlayerCharacter pc) {
-		String skillName = input.substring(6);
-		for(Skill s : pc.getSkills()) {
-			if(skillName.equalsIgnoreCase(s.getName())) {
-				System.out.println(s.toString());
-				return;
-			}
-		}
-	}
-	private static void info(PlayerCharacter pc) {
-		System.out.println(pc.toString());
+	private static void inventory(PlayerCharacter pc) {
+		System.out.println(pc.toStringInventory());
 	}
 
 	//items
@@ -181,7 +112,7 @@ public class Input {
 					item = container.getStoredItems().get(a);
 					if(container.isOpen()) {
 						pc.addToInventory(item);
-						container.takeOut(item);
+						container.attemptToRemove(item);
 						System.out.println("Taken from " + container.getName() + ".");
 						return;
 					}
@@ -235,51 +166,6 @@ public class Input {
 			}
 		}
 		System.out.println("You don't have that item.");
-	}
-	private static void equip(String input, PlayerCharacter pc) {
-		//get name of item wanted
-		String itemInput = input.substring(6);
-
-		//if item is in current location
-		for(int a = 0; a < pc.getCurrentLocation().getItems().size(); a++) {
-			Item i = pc.getCurrentLocation().getItems().get(a);
-
-			//match
-			if(i.getName().equalsIgnoreCase(itemInput)) {
-				if(i instanceof Equippable) {
-					pc.getCurrentLocation().removeItem(i);
-					((Equippable) i).equip(pc);
-					System.out.println(i.getName() + " taken and equipped.");
-					return;
-				}
-				else {
-					System.out.println("Item requested is not equippable.");
-				}
-				return;
-			}
-		}
-
-		//if item is in inventory
-		for(int a = 0; a < pc.getInventory().size(); a++) {
-			Item i = pc.getInventory().get(a);
-
-			//match
-			if(i.getName().equalsIgnoreCase(itemInput)) {
-				if(i instanceof Equippable) {
-					pc.removeFromInventory(i);
-					((Equippable) i).equip(pc);
-					System.out.println(i.getName() + " equipped from inventory.");
-					return;
-				}
-				else {
-					System.out.println("Item requested is not equippable.");
-				}
-				return;
-			}
-		}
-
-		System.out.println("Item requested is not in your location or your inventory.");
-		return;
 	}
 	private static void open(String input, PlayerCharacter pc) {
 		String containerName = input.substring(5);
@@ -390,11 +276,11 @@ public class Input {
 		}
 
 		//if both were found, try to store item in container
-		if(container.canHold(movedItem.getWeight())) {
+		if(container.canHold(movedItem.getSize())) {
 			//store item
 			//check if open
 			if(container.isOpen()) {
-				container.store(movedItem);
+				container.attemptToAdd(movedItem);
 				System.out.println("The " + movedItem.getName() + " was put in the " + container.getName() + ".");
 			}
 			//if closed
@@ -412,190 +298,17 @@ public class Input {
 		}
 		return;
 	}
-	private static void consume(String input, PlayerCharacter pc) {
-		//get name of item requested
-		String itemInput;
-		if(input.startsWith("consume ")) itemInput = input.substring(8);
-		else if(input.startsWith("eat ")) itemInput = input.substring(4);
-		else itemInput = input.substring(6);
-
-		//if item is in current location
-		for(int a = 0; a < pc.getCurrentLocation().getItems().size(); a++) {
-			Item i = pc.getCurrentLocation().getItems().get(a);
-
-			//match
-			if(i.getName().equalsIgnoreCase(itemInput)) {
-				if(i instanceof Consumable) {
-					System.out.print(i.getName() + " taken and consumed. ");
-					((Consumable) i).consume(pc);
-					return;
-				}
-				else {
-					System.out.println("Item requested is not consumable.");
-				}
-				return;
-			}
-		}
-
-		//if item is in inventory
-		for(int a = 0; a < pc.getInventory().size(); a++) {
-			Item i = pc.getInventory().get(a);
-
-			//match
-			if(i.getName().equalsIgnoreCase(itemInput)) {
-				if(i instanceof Consumable) {
-					pc.removeFromInventory(i);
-					System.out.print(i.getName() + " taken from inventory and consumed. ");
-					((Consumable) i).consume(pc);
-					return;
-				}
-				else {
-					System.out.println("Item requested is not consumable.");
-				}
-				return;
-			}
-		}
-	}
 
 	//exploring
 	private static void look(PlayerCharacter pc) {
-		Main.showLocation(pc);
-	}
-	private static void attack(String input, PlayerCharacter pc) {
-		//get name of item requested
-		String nameInput;
-		if(input.startsWith("attack ")) nameInput = input.substring(7);
-		else if(input.startsWith("break ")) nameInput = input.substring(6);
-		else nameInput = input.substring(8);
-
-		//look for creatures in current location
-		for(int a = 0; a < pc.getCurrentLocation().getCreatures().size(); a++) {
-			Creature c = pc.getCurrentLocation().getCreatures().get(a);
-			if(c.getName().equalsIgnoreCase(nameInput)) {
-				pc.basicAttack(c);
-				Main.engageCombat(pc, c);
-			}
-		}
-		//look for item in current location
-		Item targetItem = null;
-		for(int a = 0; a < pc.getCurrentLocation().getItems().size(); a++) {
-			Item i = pc.getCurrentLocation().getItems().get(a);
-			if(i.getName().equalsIgnoreCase(nameInput)) {
-				targetItem = i;
-			}
-		}
-
-		//look for item in inventory
-		for(int a = 0; a < pc.getInventory().size(); a++) {
-			Item i = pc.getInventory().get(a);
-			if(i.getName().equalsIgnoreCase(nameInput)) {
-				targetItem = i;
-			}
-		}
-
-		//if item not found, exit
-		if(targetItem == null) {
-			System.out.println("Requested item not found in current location or your inventory.");
-			return;
-		}
-
-		//try to destroy target item
-		//if bare hands
-		if(pc.getWeapon() == null) {
-			//if item is easily breakable
-			if(targetItem.canDestroy(1)) {
-				targetItem.destroy();
-
-				pc.getCurrentLocation().removeItem(targetItem);
-				pc.removeFromInventory(targetItem);
-
-				System.out.println(targetItem.getName() + " destroyed with your bare hands.");
-			}
-			//if item is hard
-			else {
-				System.out.println("Cannot destroy " + targetItem.getName() + " with your bare hands.");
-			}
-		}
-		//if weapon can destroy item
-		else if(targetItem.canDestroy(pc.getWeapon().getHardness())) {
-			targetItem.destroy();
-
-			pc.getCurrentLocation().removeItem(targetItem);
-			pc.removeFromInventory(targetItem);
-
-			System.out.println(targetItem.getName() + " destroyed with your " + pc.getWeapon().getName() + ".");
-		}
-		//if weapon is too weak
-		else {
-			System.out.println("Cannot destroy " + targetItem.getName() + " with your " + pc.getWeapon().getName() + ".");
-		}
-	}
-	private static void talkTo(String input, PlayerCharacter pc) {
-		String nameInput = input.substring(8);
-
-		//look for creatures in current location
-		for(Creature c : pc.getCurrentLocation().getCreatures()) {
-			if(c.getName().equalsIgnoreCase(nameInput)) {
-				if(c instanceof NPC) {
-					((NPC) c).talk();
-					return;
-				}
-				else {
-					System.out.println(c.getName() + "doesn't talk, despite your prodding.");
-					return;
-				}
-			}
-		}
-		System.out.println("No such creature is here.");
-		return;
-	}
-	private static void give(String input, PlayerCharacter pc) {
-		//order: 'give ITEM to CREATURE'
-		String itemName = input.substring(5, input.indexOf(" to"));
-		String creatureName = input.substring(input.indexOf(" to") + 4);
-		Item item = null;
-		Creature creature = null;
-
-		//check inventory for item
-		for(int a = 0; a < pc.getInventory().size(); a++) {
-			Item i = pc.getInventory().get(a);
-			if(i.getName().equalsIgnoreCase(itemName)) {
-				item = i;
-			}
-		}
-		if(item == null) {
-			System.out.println("Requested item not found in inventory.");
-			return;
-		}
-
-		//check location for creature
-		for(Creature c : pc.getCurrentLocation().getCreatures()) {
-			if(c.getName().equalsIgnoreCase(creatureName)) {
-				creature = c;
-			}
-		}
-		if(creature == null) {
-			System.out.println("Requested creature not found in current location.");
-			return;
-		}
-
-		//give item to creature
-		if(creature instanceof Enemy) {
-			System.out.println("The " + creature.getName() + " ignores your offering.");
-			return;
-		}
-		else if(creature instanceof NPC) {
-			((NPC) creature).give(item);
-			pc.removeFromInventory(item);
-			return;
-		}
+		Main.showLocation(pc.getCurrentLocation());
 	}
 	private static void go(String input, PlayerCharacter pc) {
 		String direction = input.substring(3);
 		for(Exit e : pc.getCurrentLocation().getExits()) {
 			if(direction.equalsIgnoreCase(e.getDirectionName())) {
 				pc.setCurrentLocation(e.getLeadsTo());
-				Main.showLocation(pc);
+				Main.showLocation(pc.getCurrentLocation());
 				return;
 			}
 		}

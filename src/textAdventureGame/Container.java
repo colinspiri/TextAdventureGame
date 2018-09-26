@@ -1,35 +1,46 @@
 package textAdventureGame;
 import java.util.*;
+//a container is an item that can store other items inside (e.g. a chest, a backpack)
 
 public class Container extends Item {
-	//storing items
-	private ArrayList<Item> stored;
-	private int capacity;
-	private int storedWeight;
-
-	//state
+	//variables
+	private ArrayList<Item> storedItems;
+	private int maxSlots;
+	private int storedSlots;
 	private boolean open;
-	private boolean locked;
 
-	public Container(String name, String description, int value, int weight, int capacity, int hardness) {
-		super(name, description, value, weight, hardness);
-		this.capacity = capacity;
-		stored = new ArrayList<Item>();
-		storedWeight = 0;
+	//constructor
+	public Container(String name, String description, int size, int maxSlots) {
+		super(name, description, size);
+		this.maxSlots = maxSlots;
+		storedItems = new ArrayList<Item>();
+		storedSlots = 0;
 		open = false;
-		locked = false;
 	}
 
+	//methods
 	//interact methods
-	public void store(Item i) {
+	private void addItem(Item item) {
+		if(canHold(item.getSize())) {
+			storedItems.add(item);
+			storedSlots += item.getSize();
+		}
+	}
+	private void removeItem(Item item) {
+		if(storedItems.contains(item)) {
+			storedItems.remove(item);
+			storedSlots -= item.getSize();
+		}
+	}
+	public void attemptToAdd(Item item) {
 		if(open) {
-			this.addItem(i);
+			this.addItem(item);
 		}
 		else {
 			System.out.println(this.getName() + " is closed.");
 		}
 	}
-	public void takeOut(Item i) {
+	public void attemptToRemove(Item i) {
 		if(open) {
 			this.removeItem(i);
 		}
@@ -37,48 +48,27 @@ public class Container extends Item {
 			System.out.println(this.getName() + " is closed.");
 		}
 	}
-	public void open() {
-		if(!locked) {
-			open = true;
-		}
-		else {
-			System.out.println(this.getName() + " is locked.");
-		}
-	}
-	public void close() {
-		open = false;
-	}
-	public void unlock(int chance) {
-		if(locked) {
-			//chance is percent chance of unlocking
-			int randomNum = (int) (Math.round(Math.random()*100));
-			if(randomNum < chance) {
-				locked = false;
-				System.out.println("Unlocked " + this.getName() + ".");
-			}
-			else {
-				System.out.println("Failed to unlock " + this.getName());
-			}
-		}
-		else {
-			System.out.println(this.getName() + " is already unlocked.");
-		}
-	}
-	public boolean contains(Item item) {
-		for(Item i : stored) {
-			if(i.equals(item)) {
+	public boolean contains(Item searchedItem) {
+		for(Item item : storedItems) {
+			if(item.equals(searchedItem)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	public boolean canHold(int amount) {
-		return (storedWeight + amount <= capacity);
+	public boolean canHold(int additionalSlots) {
+		return (storedSlots + additionalSlots <= maxSlots);
+	}
+	public void open() {
+		open = true;
+	}
+	public void close() {
+		open = false;
 	}
 
 	//toString
 	public String toStringSpecifics() {
-		String returnedString = "	capacity: " + storedWeight + "/" + capacity + " pounds" + "\n";
+		String returnedString = "	capacity: " + storedSlots + "/" + maxSlots + " slots" + "\n";
 		returnedString += this.toStringContents();
 		return returnedString;
 	}
@@ -86,13 +76,13 @@ public class Container extends Item {
 		String returnedString = "";
 
 		//if no contents
-		if(stored.size() == 0) {
+		if(storedSlots == 0) {
 			returnedString += "	empty";
 		}
 		//print all items stored in container
 		else {
-			for(Item i : stored) {
-				returnedString += "	" + i.toStringShort() + " (" + i.getWeight() + " lbs)" + "\n";
+			for(Item item : storedItems) {
+				returnedString += "	" + item.getName() + " (size: " + item.getSize() + ")" + "\n";
 			}
 		}
 
@@ -101,39 +91,21 @@ public class Container extends Item {
 
 	//get methods
 	public ArrayList<Item> getStoredItems() {
-		return stored;
+		return storedItems;
 	}
-	public int getCarryingCapacity() {
-		return capacity;
+	public int getMaxSlots() {
+		return maxSlots;
 	}
-	public int getStoredWeight() {
-		return storedWeight;
+	public int getStoredSlots() {
+		return storedSlots;
 	}
 	public boolean isOpen() {
 		return open;
 	}
-	public boolean isLocked() {
-		return locked;
-	}
 
 	//set methods
-	private void addItem(Item item) {
-		if(canHold(item.getWeight())) {
-			stored.add(item);
-			storedWeight += item.getWeight();
-		}
-	}
-	private void removeItem(Item item) {
-		if(stored.contains(item)) {
-			stored.remove(item);
-			storedWeight -= item.getWeight();
-		}
-	}
 	public void setOpen(boolean value) {
 		open = value;
-	}
-	public void setLocked(boolean value) {
-		locked = value;
 	}
 }
 

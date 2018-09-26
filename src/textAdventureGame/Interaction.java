@@ -6,14 +6,11 @@ public class Interaction {
 	private String preview;
 	private String aftermath;
 	private boolean interactedWith;
-	
-	//creature or item
-	Creature creature;
+
 	Item item;
 	
 	//creature constructor
-	public Interaction(Creature c, String preview, String aftermath) {
-		creature = c;
+	public Interaction(String preview, String aftermath) {
 		this.preview = preview;
 		this.aftermath = aftermath;
 	}
@@ -37,9 +34,6 @@ public class Interaction {
 	}
 	public boolean hasBeenInteractedWith() {
 		return interactedWith;
-	}
-	public Creature getCreature() {
-		return creature;
 	}
 	public Item getItem() {
 		return item;

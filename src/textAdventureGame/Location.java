@@ -40,18 +40,6 @@ public class Location {
 				}
 			}
 		}
-		//creatures
-		ArrayList<Creature> creatures = this.getCreatures();
-		if(creatures.size() > 0) {
-			returnedString += "\n" + "Creatures here: ";
-			for(int a = 0; a < creatures.size(); a++) {
-				Creature c = creatures.get(a);
-				returnedString += c.getName();
-				if(a < creatures.size() - 1) {
-					returnedString += ", ";
-				}
-			}
-		}
 		
 		
 		returnedString += "\n";
@@ -78,13 +66,6 @@ public class Location {
 			if(i.getItem() instanceof Item) items.add(i.getItem());
 		}
 		return items;
-	}
-	public ArrayList<Creature> getCreatures() {
-		ArrayList<Creature> creatures = new ArrayList<Creature>();
-		for(Interaction i : interactions) {
-			if(i.getCreature() instanceof Creature) creatures.add(i.getCreature());
-		}
-		return creatures;
 	}
 
 	//set methods
@@ -114,15 +95,6 @@ public class Location {
 		for(int a = 0; a < interactions.size(); a++) {
 			if(interactions.get(a).getItem() != null) {
 				if(interactions.get(a).getItem().getName().equalsIgnoreCase(item.getName())) {
-					interactions.remove(interactions.get(a));
-				}
-			}
-		}
-	}
-	public void removeCreature(Creature creature) {
-		for(int a = 0; a < interactions.size(); a++) {
-			if(interactions.get(a).getCreature() != null) {
-				if(interactions.get(a).getCreature().getName().equalsIgnoreCase(creature.getName())) {
 					interactions.remove(interactions.get(a));
 				}
 			}

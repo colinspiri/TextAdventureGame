@@ -1,63 +1,39 @@
 package textAdventureGame;
 
 public abstract class Item {
+	//variables
 	private String name;
 	private String description;
-	private int value;
-	private int weight;
-	private int hardness;
+	private int size;
 	
-	//constructor no value (for paper and other simple items)
-	public Item(String name, String description) {
+	//constructor
+	public Item(String name, String description, int size) {
 		this.name = name;
 		this.description = description;
-		value = 0;
-		weight = 0;
+		this.size = size;
 	}
 	
-	//constructor with value
-	public Item(String name, String description, int value, int weight, int hardness) {
-		this.name = name;
-		this.description = description;
-		this.value = value;
-		this.weight = weight;
-		this.hardness = hardness;
-	}
-	
-	//hardness
-	public boolean canDestroy(int effort) {
-		if(effort >= hardness) return true;
-		else return false;
-	}
-	public void destroy() {
-		hardness = 0;
-	}
-	public boolean isDestoyed() {
-		return hardness > 0;
-	}
-	
+	//methods
 	//toString
 	public String toString() {
-		//basics
+		//name
 		String returnedString = name + " (";
-		returnedString += value + " gp" + ", " + weight;
-		if(weight == 1) returnedString += " pound";
-		else returnedString += " pounds";
+		
+		//size
+		returnedString += "size: " + size;
+		if(size == 1) returnedString += " slot";
+		else returnedString += " slots";
 		returnedString += ")" + "\n";
 		
 		//description
 		returnedString += description + "\n";
 		
-		//specifics
+		//specifics, if any
 		returnedString += this.toStringSpecifics();
 		
 		return returnedString;
 	}
 	public abstract String toStringSpecifics();
-	public String toStringShort() {
-		String returnedString = name;
-		return returnedString;
-	}
 	
 	//get methods
 	public String getName() {
@@ -66,14 +42,8 @@ public abstract class Item {
 	public String getDescription() {
 		return description;
 	}
-	public int getValue() {
-		return value;
-	}
-	public int getWeight() {
-		return weight;
-	}
-	public int getHardness() {
-		return hardness;
+	public int getSize() {
+		return size;
 	}
 }
 
