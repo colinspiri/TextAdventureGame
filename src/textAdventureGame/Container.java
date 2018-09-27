@@ -20,32 +20,16 @@ public class Container extends Item {
 
 	//methods
 	//interact methods
-	private void addItem(Item item) {
+	public void addItem(Item item) {
 		if(canHold(item.getSize())) {
 			storedItems.add(item);
 			storedSlots += item.getSize();
 		}
 	}
-	private void removeItem(Item item) {
+	public void removeItem(Item item) {
 		if(storedItems.contains(item)) {
 			storedItems.remove(item);
 			storedSlots -= item.getSize();
-		}
-	}
-	public void attemptToAdd(Item item) {
-		if(open) {
-			this.addItem(item);
-		}
-		else {
-			System.out.println(this.getName() + " is closed.");
-		}
-	}
-	public void attemptToRemove(Item i) {
-		if(open) {
-			this.removeItem(i);
-		}
-		else {
-			System.out.println(this.getName() + " is closed.");
 		}
 	}
 	public boolean contains(Item searchedItem) {

@@ -63,10 +63,6 @@ public class Input {
 		}
 	}
 
-	private static void inventory(PlayerCharacter pc) {
-		System.out.println(pc.toStringInventory());
-	}
-
 	//items
 	private static void take(String input, PlayerCharacter pc) {
 		//take item from container
