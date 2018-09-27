@@ -24,7 +24,7 @@ public class Main {
 		Location startingLocation;
 
 		//clearing
-		Location clearing = new Location("Clearing", "The floor of this clearing is covered in moss and fungi. "
+		Location clearing = new Location("a clearing", "The floor of this clearing is covered in moss and fungi. "
 				+ "The trees beyond this clearing obscure the light, rendering it "
 				+ "impossible to look beyond. The sound of running water comes from the east.");
 			//apple
@@ -33,7 +33,7 @@ public class Main {
 		clearing.addInteraction(appleInt);
 
 		//river
-		Location river = new Location("River", "You see a river. Lifeless corpses lie on the ground, freshly "
+		Location river = new Location("a river", "You see a river. Lifeless corpses lie on the ground, freshly "
 				+ "killed. Downstream, the river flows "
 				+ "to the west.");
 			//chest

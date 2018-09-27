@@ -33,7 +33,8 @@ public abstract class Command {
 			for(Exit exit : pc.getCurrentLocation().getExits()) {
 				if(direction.equalsIgnoreCase(exit.getDirectionName())) {
 					pc.setCurrentLocation(exit.getLeadsTo());
-					System.out.println("You");
+					System.out.println();
+					System.out.println(pc.getCurrentLocation().getDescription());
 					return;
 				}
 			}
