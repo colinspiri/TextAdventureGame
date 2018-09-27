@@ -29,20 +29,20 @@ public class Location {
 		}
 		
 		//items
-		ArrayList<Item> items = this.getItems();
-		if(items.size() > 0) {
-			returnedString += "\n" + "Items here: ";
-			for(int a = 0; a < items.size(); a++) {
-				Item i = items.get(a);
-				returnedString += i.getName();
-				if(a < items.size() - 1) {
-					returnedString += ", ";
-				}
-			}
-		}
-		
-		
-		returnedString += "\n";
+//		ArrayList<Item> items = this.getItems();
+//		if(items.size() > 0) {
+//			returnedString += "\n" + "---Items here: ";
+//			for(int a = 0; a < items.size(); a++) {
+//				Item i = items.get(a);
+//				returnedString += i.getName();
+//				if(a < items.size() - 1) {
+//					returnedString += ", ";
+//				}
+//			}
+//		}
+//		
+//		
+//		returnedString += "---\n";
 
 		return returnedString;
 	}

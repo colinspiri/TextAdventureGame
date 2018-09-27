@@ -2,10 +2,10 @@ package textAdventureGame;
 import java.util.*;
 
 public class Input {
-	
 
 	//look for input
 	public static void lookForInput(PlayerCharacter pc) {
+		
 		//ask for input
 		Scanner keyboard = new Scanner(System.in);
 
@@ -14,21 +14,27 @@ public class Input {
 			String input = keyboard.nextLine();
 
 			//print
-			if(input.startsWith("item ")) {
-				item(input, pc);
+			if(input.startsWith("inspect ")) {
+				String itemRequested = input.substring(8);
+				Command.Inspect.run(itemRequested, pc);
 				continue;
 			}
 			else if (input.equalsIgnoreCase("inventory")) {
-				inventory(pc);
+				Command.Inventory.run(pc);
+			}
+			
+			else if(input.startsWith("help ")) {
+				Command.Look.run(pc.getCurrentLocation());
 			}
 
 			//exploring
 			else if(input.equalsIgnoreCase("look")) {
-				look(pc);
+				Command.Look.run(pc.getCurrentLocation());
 				continue;
 			}
 			else if(input.startsWith("go ")) {
-				go(input, pc);
+				String direction = input.substring(3);
+				Command.Go.run(direction, pc);
 				return;
 			}
 
@@ -57,20 +63,6 @@ public class Input {
 		}
 	}
 
-	//print
-	private static void item(String input, PlayerCharacter pc) {
-		String itemRequested = input.substring(5);
-
-		//find item in inventory
-		for(Item item : pc.getInventory()) {
-			if(item.getName().equalsIgnoreCase(itemRequested)) {
-				System.out.println(item.toString());
-				return;
-			}
-		}
-
-		System.out.println("Item requested is not in your inventory.");
-	}
 	private static void inventory(PlayerCharacter pc) {
 		System.out.println(pc.toStringInventory());
 	}
@@ -299,22 +291,6 @@ public class Input {
 		return;
 	}
 
-	//exploring
-	private static void look(PlayerCharacter pc) {
-		Main.showLocation(pc.getCurrentLocation());
-	}
-	private static void go(String input, PlayerCharacter pc) {
-		String direction = input.substring(3);
-		for(Exit e : pc.getCurrentLocation().getExits()) {
-			if(direction.equalsIgnoreCase(e.getDirectionName())) {
-				pc.setCurrentLocation(e.getLeadsTo());
-				Main.showLocation(pc.getCurrentLocation());
-				return;
-			}
-		}
-		System.out.println("Direction not available.");
-		return;
-	}
 }
 
 

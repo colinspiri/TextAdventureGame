@@ -4,6 +4,8 @@ import java.util.*;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		Command.Look.showTutorial();
 
 		//create important variables and show the starting location
 	
