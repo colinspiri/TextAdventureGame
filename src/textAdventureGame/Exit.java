@@ -2,76 +2,66 @@ package textAdventureGame;
 
 public class Exit {
 	//numerical codes
-	public static final int UNDEFINED = 0;
-	public static final int NORTH = 1;
-	public static final int SOUTH = 2;
-	public static final int EAST = 3;
-	public static final int WEST = 4;
-	public static final int UP = 5;
-	public static final int DOWN = 6;
-	public static final int NORTHEAST = 7;
-	public static final int NORTHWEST = 8;
-	public static final int SOUTHEAST = 9;
-	public static final int SOUTHWEST = 10;
-	public static final int IN = 11;
-	public static final int OUT = 12;
-	
+	public static final int NORTH = 0;
+	public static final int SOUTH = 1;
+	public static final int EAST = 2;
+	public static final int WEST = 3;
+	public static final int NORTHEAST = 4;
+	public static final int NORTHWEST = 5;
+	public static final int SOUTHEAST = 6;
+	public static final int SOUTHWEST = 7;
+	public static final int UP = 8;
+	public static final int DOWN = 9;
+
 	//String codes
-	public static final String[] dirNames = {
-			"UNDEFINED",
+	public static final String[] directionNames = {
 			"NORTH",
 			"SOUTH",
 			"EAST",
 			"WEST",
-			"UP",
-			"DOWN",
 			"NORTHEAST",
 			"NORTHWEST",
 			"SOUTHEAST",
 			"SOUTHWEST",
-			"IN",
-			"OUT"
+			"UP",
+			"DOWN"
 	};
 
-	
+
 	private Location leadsTo = null;
-	private int direction;
-	
-	private String directionName;
-	
-	//default constructor
-	public Exit() {
-		direction = Exit.UNDEFINED;
-		leadsTo = null;
-		directionName = dirNames[UNDEFINED];
+	private String direction;
+	private String description;
+
+	//constructor using numerical codes for directions
+	public Exit(int directionCode, Location leadsTo, String description) {
+		if(directionCode <= directionNames.length) direction = directionNames[directionCode];
+		else throw new IllegalArgumentException(directionCode + " is not a valid direction code!");
+
+		this.leadsTo = leadsTo;
+		this.description = description;
 	}
-	
-	//full constructor
-	public Exit(int tempDirection, Location tempLeadsTo) {
-		direction = tempDirection;
-		if(tempDirection <= dirNames.length) {
-			directionName = dirNames[tempDirection];
-		}
-		
-		leadsTo = tempLeadsTo;
+
+	//constructor using custom String direction
+	public Exit(String direction, Location leadsTo, String description) {
+		this.direction = direction;
+		this.leadsTo = leadsTo;
+		this.description = description;
 	}
-	
+
+	//toString
 	public String toString() {
-		return directionName;
+		return direction + " to " + leadsTo.getName();
 	}
-	
-	public void setDirectionName(String dirName) {
-		directionName = dirName;
-	}
-	public void setLeadsTo(Location newLeadsTo) {
-		leadsTo = newLeadsTo;
-	}
-	
-	public String getDirectionName() {
-		return directionName;
+
+	//get methods
+	public String getDirection() {
+		return direction;
 	}
 	public Location getLeadsTo() {
 		return leadsTo;
+	}
+	public String getDescription() {
+		return description;
 	}
 }
 

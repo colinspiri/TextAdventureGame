@@ -1,7 +1,8 @@
 TODO List for Text Adventure Game:
--add classes for commands (with name, description of usage, inputs, and executable methods)
--add ArrayList of commands in Input
--add tutorial and help/man pages for all commands
+-make syntax for input more lenient; process input in Command class
+-try making variables and methods in PlayerCharacter all static to access PlayerCharacter without having to pass a variable through methods
 -add gold value to items and enable player to sell/buy items
 -make 2D array grid of wilderness locations with tags on locations to tell if they have any other Exits to look at (like caves or houses or dungeons or any special location)
--change Exit class to work with any String (e.g. "in the hole" or "through the tunnel"); remove int and replace with simple Strings
+-make inventory size smaller and restrict putting things in inventory
+-test core game with lots and lots of items and interactions and locations
+-change Command.Inspect to work with Interactions (able to inspect a phenomenon for more information; or the inspection could trigger it, like inspecting a moving bush to get attacked by a bandit)
