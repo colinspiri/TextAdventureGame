@@ -39,7 +39,7 @@ public class Location {
 		}
 		
 		//add any developer notes
-		returnedString += this.toStringDev();
+		//returnedString += this.toStringDev();
 
 		returnedString += "\n";
 		return returnedString;

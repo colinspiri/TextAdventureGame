@@ -6,3 +6,5 @@ TODO List for Text Adventure Game:
 -make inventory size smaller and restrict putting things in inventory
 -test core game with lots and lots of items and interactions and locations
 -change Command.Inspect to work with Interactions (able to inspect a phenomenon for more information; or the inspection could trigger it, like inspecting a moving bush to get attacked by a bandit)
+-bug: help command displays 2 sets of commands
+-bug: add inventory to help command

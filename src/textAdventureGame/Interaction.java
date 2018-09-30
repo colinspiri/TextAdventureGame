@@ -9,7 +9,7 @@ public class Interaction {
 
 	Item item;
 	
-	//creature constructor
+	//normal constructor
 	public Interaction(String preview, String aftermath) {
 		this.preview = preview;
 		this.aftermath = aftermath;

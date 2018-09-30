@@ -29,7 +29,7 @@ public class Main {
 		Trinket apple = new Trinket("apple", "This is an apple.");
 		Interaction appleInt = new Interaction(apple, "You see a red apple at your feet.", "");
 		clearing.addInteraction(appleInt);
-
+		
 		//river
 		Location river = new Location("a river", "You see a river.", "Your reflection is clearly visible on the surface of the water.");
 			//chest
